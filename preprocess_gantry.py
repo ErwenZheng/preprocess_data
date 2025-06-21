@@ -169,6 +169,12 @@ for i in tqdm(range(len(date_list))):
     if date_list[i].date() in holidays:
         holiday_info[i] = 1
 
+weekend_info = np.zeros((len(date_list), 1))
+
+for i in tqdm(range(len(date_list))):
+    if date_list[i].weekday() in [5, 6]:  # 5: Saturday, 6: Sunday
+        weekend_info[i] = 1
+
 flow_gantry = -np.ones((len(date_list), len(gantry_gantryid_list), len(feat) + 1))
 id_name_dic_new = dict(zip(gantry_id_name_dic.values(), gantry_id_name_dic.keys()))
 
@@ -292,4 +298,5 @@ adj_csv = pd.DataFrame(adj_csv, columns=['from','to','distance'])
 adj_csv.to_csv(ws + '/data/gantry/%s/%s/gantry_adj.csv' % (feat_str, date_str),index=False)
 np.save(ws + '/data/gantry/%s/%s/flow_data_gantry.npy' % (feat_str, date_str),flow_gantry)
 np.save(ws + '/data/gantry/%s/%s/holidayinfo.npy' % (feat_str, date_str), holiday_info)
+np.save(ws + '/data/gantry/%s/%s/weekendifno.npy' % (feat_str, date_str), weekend_info)
 print('saved ~~')

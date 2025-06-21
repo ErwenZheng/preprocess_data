@@ -202,6 +202,12 @@ for i in tqdm(range(len(date_list))):
     if date_list[i].date() in holidays:
         holiday_info[i] = 1
 
+weekend_info = np.zeros((len(date_list), 1))
+
+for i in tqdm(range(len(date_list))):
+    if date_list[i].weekday() in [5, 6]:  # 5: Saturday, 6: Sunday
+        weekend_info[i] = 1
+
 flow_data = -np.ones((len(date_list), len(station_stationid_list),len(feat) + 1)) # [b, N, F + 1], 各种流量，小时时间戳
 id_name_dic_new = dict(zip(station_id_name_dic.values(), station_id_name_dic.keys()))
 for i in tqdm(station_flow_wo_stathour.itertuples()):
@@ -337,4 +343,5 @@ adj_csv = pd.DataFrame(adj_csv, columns=['from','to','distance'])
 adj_csv.to_csv(ws + '/data/station/%s/%s/station_adj.csv' % (feat_str, date_str),index=False)
 np.save(ws + '/data/station/%s/%s/flow_data_station.npy' % (feat_str, date_str), flow_data)
 np.save(ws + '/data/station/%s/%s/holidayinfo_station.npy' % (feat_str, date_str),holiday_info)
+np.save(ws + '/data/gantry/%s/%s/weekendifno.npy' % (feat_str, date_str), weekend_info)
 print('saved ~~')
